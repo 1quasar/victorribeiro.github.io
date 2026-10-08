@@ -129,7 +129,7 @@ function initSmoothScroll() {
 }
 
 /**
- * Background Canvas: Partículas e Linhas Conectadas Sutis em Verde Neon
+ * Background Canvas: Linhas de código e scripts flutuantes e discretos
  */
 function initBackgroundCanvas() {
   const canvas = document.getElementById('bg-canvas');
@@ -146,54 +146,56 @@ function initBackgroundCanvas() {
     height = canvas.height = window.innerHeight;
   });
 
-  // Quantidade balanceada para performance impecável
-  const particleCount = Math.min(Math.floor(window.innerWidth / 30), 40);
-  const particles = [];
+  // Trechos de scripts técnicos reais
+  const codeSnippets = [
+    'Route::get("/api/v1/services", [ServiceController::class, "index"]);',
+    '@SpringBootApplication public class Application { ... }',
+    'SELECT u.id, u.name, r.role FROM users u JOIN roles r ON u.role_id = r.id;',
+    'git checkout -b feature/kernel-service origin/main',
+    'if ($response->status() === 200) { return response()->json($data); }',
+    '@Autowired private UserRepository userRepository;',
+    'curl -X POST https://api.workspace.internal/v1/auth -H "Authorization: Bearer"',
+    'public function store(Request $request): JsonResponse',
+    'systemctl status nginx.service --no-pager',
+    'CREATE TRIGGER trg_after_update AFTER UPDATE ON orders FOR EACH ROW',
+    'ResponseEntity.ok().body(new ApiResponse<>(HttpStatus.OK, data));',
+    'docker compose up -d --build postgres redis web'
+  ];
 
-  for (let i = 0; i < particleCount; i++) {
-    particles.push({
-      x: Math.random() * width,
+  // Criação dos elementos de código distribuídos pela tela
+  const columnCount = Math.floor(width / 180);
+  const streams = [];
+
+  for (let i = 0; i < columnCount; i++) {
+    streams.push({
+      x: i * 190 + (Math.random() * 40),
       y: Math.random() * height,
-      vx: (Math.random() - 0.5) * 0.45,
-      vy: (Math.random() - 0.5) * 0.45,
-      size: Math.random() * 1.5 + 1
+      speed: 0.35 + Math.random() * 0.45,
+      text: codeSnippets[Math.floor(Math.random() * codeSnippets.length)],
+      opacity: 0.10 + Math.random() * 0.05 // Opacidade ultra-discreta para não ofuscar o conteúdo
     });
   }
 
   function render() {
     ctx.clearRect(0, 0, width, height);
 
-    // Desenhar partículas
-    for (let i = 0; i < particles.length; i++) {
-      const p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
+    ctx.font = '11px "JetBrains Mono", monospace';
 
-      if (p.x < 0) p.x = width;
-      if (p.x > width) p.x = 0;
-      if (p.y < 0) p.y = height;
-      if (p.y > height) p.y = 0;
+    for (let i = 0; i < streams.length; i++) {
+      const s = streams[i];
 
-      ctx.fillStyle = 'rgba(16, 185, 129, 0.4)';
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
+      // Cor verde com alpha bem baixo e legibilidade sutil
+      ctx.fillStyle = `rgba(16, 185, 129, ${s.opacity})`;
+      ctx.fillText(s.text, s.x, s.y);
 
-      // Conexões de nós próximos
-      for (let j = i + 1; j < particles.length; j++) {
-        const p2 = particles[j];
-        const dx = p.x - p2.x;
-        const dy = p.y - p2.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+      s.y += s.speed;
 
-        if (dist < 120) {
-          ctx.strokeStyle = `rgba(0, 255, 157, ${0.12 * (1 - dist / 120)})`;
-          ctx.lineWidth = 0.6;
-          ctx.beginPath();
-          ctx.moveTo(p.x, p.y);
-          ctx.lineTo(p2.x, p2.y);
-          ctx.stroke();
-        }
+      // Quando passa do fim da página, recicla com um novo snippet
+      if (s.y > height + 50) {
+        s.y = -20;
+        s.x = (i * 190) + (Math.random() * 30);
+        s.text = codeSnippets[Math.floor(Math.random() * codeSnippets.length)];
+        s.opacity = 0.035 + Math.random() * 0.045;
       }
     }
 

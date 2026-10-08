@@ -31,12 +31,8 @@
   background: #10b981;
 }
 
-/* Malha de Fundo Futurista Discreta */
 .cyber-grid {
-  background-size: 40px 40px;
-  background-image: 
-    linear-gradient(to right, rgba(16, 185, 129, 0.035) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(16, 185, 129, 0.035) 1px, transparent 1px);
+  display: none;
 }
 
 /* Glassmorphism Classes */
@@ -76,19 +72,30 @@
 .terminal-dots {
   display: flex;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.45rem;
 }
 
-.terminal-dots span {
-  display: inline-block;
-  width: 0.65rem;
-  height: 0.65rem;
-  border-radius: 9999px;
+.terminal-dots .hex-icon {
+  width: 11px;
+  height: 11px;
+  fill: none;
+  stroke: rgba(16, 185, 129, 0.45);
+  stroke-width: 2;
+  transition: all 0.3s ease;
 }
 
-.terminal-dots span:nth-child(1) { background-color: #ef4444; opacity: 0.8; }
-.terminal-dots span:nth-child(2) { background-color: #eab308; opacity: 0.8; }
-.terminal-dots span:nth-child(3) { background-color: #22c55e; opacity: 0.8; }
+.terminal-card:hover .terminal-dots .hex-icon {
+  stroke: #00ff9d;
+  filter: drop-shadow(0 0 2px rgba(0, 255, 157, 0.6));
+}
+
+.terminal-dots .hex-icon:nth-child(2) {
+  opacity: 0.75;
+}
+
+.terminal-dots .hex-icon:nth-child(3) {
+  opacity: 0.5;
+}
 
 .terminal-title {
   font-family: 'JetBrains Mono', monospace;
